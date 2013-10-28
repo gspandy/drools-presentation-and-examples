@@ -1,6 +1,8 @@
 package lodzjug.presentation.drools.example01.model;
 
-public class Symptom {
+import java.util.Map;
+
+public abstract class Symptom {
 	public static enum SymptomExistence {
 		EXISTS, NOT_EXISTS, UNKNOWN;
 	}
@@ -24,5 +26,7 @@ public class Symptom {
 		existing = SymptomExistence.NOT_EXISTS;
 		return this;
 	}
+
+	abstract void details(Map<String, Object> answerDetails);
 
 }

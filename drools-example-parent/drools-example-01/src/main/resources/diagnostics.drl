@@ -1,0 +1,62 @@
+//created on: 2013-10-24
+package lodzjug.presentation.drools.example01.rules
+
+//list any import classes here.
+import lodzjug.presentation.drools.example01.model.ChestPain;
+import lodzjug.presentation.drools.example01.model.Question;
+import lodzjug.presentation.drools.example01.model.Symptom;
+import lodzjug.presentation.drools.example01.model.PainAtRest;
+import lodzjug.presentation.drools.example01.model.Age;
+import lodzjug.presentation.drools.example01.model.StSegmentAbnormal;
+import lodzjug.presentation.drools.example01.model.TWaveAbnormal;
+import lodzjug.presentation.drools.example01.model.PulmonaryEdema;
+import lodzjug.presentation.drools.example01.model.Diagnose;
+import lodzjug.presentation.drools.example01.model.Cad;
+import lodzjug.presentation.drools.example01.model.Unknown;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+//declare any global variables here
+
+global Logger logger;
+
+
+rule "Chest pain"
+
+	salience 1000
+    
+    when
+        chestPain : ChestPain( existence == Symptom.SymptomExistence.EXISTS )
+    then
+        insert(new PainAtRest().askAbout());
+        insert(new Age().askAbout());
+        insert(new StSegmentAbnormal().askAbout());
+        insert(new TWaveAbnormal().askAbout());
+        insert(new PulmonaryEdema().askAbout());
+        
+        logger.info("Ouch! Chest pain. Let's ask to see if CAD risk is high");
+end
+
+rule "Check if CAD risk is high"
+	salience 1000
+    when
+        painAtRest : PainAtRest( durationInMinutes >= 20, existence == Symptom.SymptomExistence.EXISTS )
+        age : Age( ageInYears >= 65, existence == Symptom.SymptomExistence.EXISTS  )
+        stSegmentAbnormal : StSegmentAbnormal( existence == Symptom.SymptomExistence.EXISTS )
+        tWaveAbnormal : TWaveAbnormal( existence == Symptom.SymptomExistence.EXISTS )
+        pulmonaryEdema : PulmonaryEdema( existence == Symptom.SymptomExistence.EXISTS )
+    then
+        insert(new Cad());
+        logger.info("Oooops!  CAD risk is high, better take care of yourself");
+end
+
+rule "What if no CAD diagnosed?"
+	salience 100
+    when
+        not Diagnose(  )
+        not Question( answered == true )
+    then
+        insert(new Unknown());
+        logger.info("Phew! CAD risk is low, but we still don't know what's wrong.");
+end
