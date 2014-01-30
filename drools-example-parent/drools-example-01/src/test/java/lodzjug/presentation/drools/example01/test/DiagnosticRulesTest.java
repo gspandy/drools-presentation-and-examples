@@ -18,65 +18,37 @@ import lodzjug.presentation.drools.example01.model.StSegmentAbnormal;
 import lodzjug.presentation.drools.example01.model.TWaveAbnormal;
 import lodzjug.presentation.drools.example01.model.Unknown;
 
-import org.drools.KnowledgeBase;
-import org.drools.builder.KnowledgeBuilder;
-import org.drools.builder.KnowledgeBuilderError;
-import org.drools.builder.KnowledgeBuilderFactory;
-import org.drools.builder.ResourceType;
-import org.drools.io.Resource;
-import org.drools.io.ResourceFactory;
-import org.drools.runtime.ObjectFilter;
-import org.drools.runtime.StatefulKnowledgeSession;
-import org.drools.runtime.rule.FactHandle;
 import org.junit.Before;
 import org.junit.Test;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.ObjectFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Collections2;
-
 public class DiagnosticRulesTest {
 
-	private KnowledgeBase knowledgeBase;
+	private KieContainer kieContainer;
 	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(DiagnosticRulesTest.class);
 	
 	@Before
 	public void setUp() throws Exception {
-		KnowledgeBuilder knowledgeBuilder = 
-				KnowledgeBuilderFactory.newKnowledgeBuilder();
-		Resource diagnosticRuleResource = 
-				ResourceFactory.newClassPathResource("diagnostics.drl");
-		knowledgeBuilder.add(diagnosticRuleResource , ResourceType.DRL);
-		
-		if (knowledgeBuilder.hasErrors()) {
-			logErrors(knowledgeBuilder);
-			throw new AssertionError();
-		}
-		
-		knowledgeBase = knowledgeBuilder.newKnowledgeBase();
-	}
-
-	private void logErrors(KnowledgeBuilder knowledgeBuilder) {
-		for (KnowledgeBuilderError error : knowledgeBuilder.getErrors()) {
-			String errorLine = 
-					"[" + error.getSeverity() +"] " + 
-					"at resource '" + error.getResource() + "', " + 
-					"in lines " + Arrays.toString(error.getLines()) +": " +
-					"'" + error.getMessage() + "'";
-			logger.error(errorLine );
-		}
+		KieServices kieServices = KieServices.Factory.get();
+		kieContainer = kieServices.getKieClasspathContainer();
 	}
 
 	@Test
 	public void whenChestPainGetFiveQuestions() {
-		StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
+		KieSession session = kieContainer.newKieSession();
+		
 		session.setGlobal("logger", LoggerFactory.getLogger("DIAGNOSTIC RULES"));
 		session.insert(new ChestPain().exists());
 		session.fireAllRules();
 		
-		Collection<Object> questions = session.getObjects(new ObjectFilter() {
+		Collection<? extends Object> questions = session.getObjects(new ObjectFilter() {
 			@Override
 			public boolean accept(Object fact) {
 				return fact instanceof Question;
@@ -88,12 +60,12 @@ public class DiagnosticRulesTest {
 
 	@Test
 	public void cadRiskHigh() {
-		StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
+		KieSession session = kieContainer.newKieSession();
 		session.setGlobal("logger", LoggerFactory.getLogger("DIAGNOSTIC RULES"));
 		session.insert(new ChestPain().exists());
 		session.fireAllRules();
 		
-		Collection<Object> questions = session.getObjects(new ObjectFilter() {
+		Collection<? extends Object> questions = session.getObjects(new ObjectFilter() {
 			@Override
 			public boolean accept(Object fact) {
 				return fact instanceof Question;
@@ -102,7 +74,7 @@ public class DiagnosticRulesTest {
 		
 		assertEquals(5, questions.size());
 		
-		Iterator<Object> qIterator = questions.iterator();
+		Iterator<? extends Object> qIterator = questions.iterator();
 		
 		while(qIterator.hasNext()) {
 			Question question = (Question) qIterator.next();
@@ -128,7 +100,7 @@ public class DiagnosticRulesTest {
 		
 		session.fireAllRules();
 		
-		Collection<Object> diagnoses = session.getObjects(new ObjectFilter() {
+		Collection<? extends Object> diagnoses = session.getObjects(new ObjectFilter() {
 			
 			@Override
 			public boolean accept(Object fact) {
@@ -143,12 +115,12 @@ public class DiagnosticRulesTest {
 
 	@Test
 	public void diagnoseUnknownWhenNoPulmonaryEdema() {
-		StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
+		KieSession session = kieContainer.newKieSession();
 		session.setGlobal("logger", LoggerFactory.getLogger("DIAGNOSTIC RULES"));
 		session.insert(new ChestPain().exists());
 		session.fireAllRules();
 		
-		Collection<Object> questions = session.getObjects(new ObjectFilter() {
+		Collection<? extends Object> questions = session.getObjects(new ObjectFilter() {
 			@Override
 			public boolean accept(Object fact) {
 				return fact instanceof Question;
@@ -157,7 +129,7 @@ public class DiagnosticRulesTest {
 		
 		assertEquals(5, questions.size());
 		
-		Iterator<Object> qIterator = questions.iterator();
+		Iterator<? extends Object> qIterator = questions.iterator();
 		
 		while(qIterator.hasNext()) {
 			Question question = (Question) qIterator.next();
@@ -183,7 +155,7 @@ public class DiagnosticRulesTest {
 		
 		session.fireAllRules();
 		
-		Collection<Object> diagnoses = session.getObjects(new ObjectFilter() {
+		Collection<? extends Object> diagnoses = session.getObjects(new ObjectFilter() {
 			
 			@Override
 			public boolean accept(Object fact) {
