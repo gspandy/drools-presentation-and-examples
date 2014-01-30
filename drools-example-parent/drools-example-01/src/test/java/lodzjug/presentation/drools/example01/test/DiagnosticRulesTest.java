@@ -108,14 +108,19 @@ public class DiagnosticRulesTest {
 			Question question = (Question) qIterator.next();
 			if (question.about().equals(PainAtRest.class)) {
 				session.insert(question.withDetail("durationInMinutes", 23).answer(true));
+				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(StSegmentAbnormal.class)) {
 				session.insert(question.answer(true));
+				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(TWaveAbnormal.class)) {
 				session.insert(question.answer(true));
+				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(Age.class)) {
 				session.insert(question.withDetail("ageInYears", 72).answer(true));
+				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(PulmonaryEdema.class)) {
 				session.insert(question.answer(true));
+				session.update(session.getFactHandle(question), question);
 			}
 			
 			
@@ -158,14 +163,19 @@ public class DiagnosticRulesTest {
 			Question question = (Question) qIterator.next();
 			if (question.about().equals(PainAtRest.class)) {
 				session.insert(question.withDetail("durationInMinutes", 23).answer(true));
+				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(StSegmentAbnormal.class)) {
 				session.insert(question.answer(true));
+				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(TWaveAbnormal.class)) {
 				session.insert(question.answer(true));
+				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(Age.class)) {
 				session.insert(question.withDetail("ageInYears", 72).answer(true));
+				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(PulmonaryEdema.class)) {
 				session.insert(question.answer(false));
+				session.update(session.getFactHandle(question), question);
 			}
 			
 			

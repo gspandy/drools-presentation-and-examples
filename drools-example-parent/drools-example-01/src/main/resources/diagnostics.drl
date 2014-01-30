@@ -55,8 +55,18 @@ rule "What if no CAD diagnosed?"
 	salience 100
     when
         not Diagnose(  )
-        not Question( answered == true )
+        not Question( answered == false )
     then
         insert(new Unknown());
         logger.info("Phew! CAD risk is low, but we still don't know what's wrong.");
+end
+
+rule "First step validation"
+	when
+		$currentStep : Step ( stepNo == 1 , delivery == CONFIRMED_WITH_TRANSFER )
+		$application : ApplicationForm
+	then
+		modify ($application) {
+			setDeliveryMethod(CONFIRMED_WITH_TRANSFER)
+		}
 end
