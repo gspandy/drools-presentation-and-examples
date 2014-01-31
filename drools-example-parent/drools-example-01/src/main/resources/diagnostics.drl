@@ -55,7 +55,7 @@ rule "What if no CAD diagnosed?"
 	salience 100
     when
         not Diagnose(  )
-        not Question( answered == true )
+        not Question( answered == false )
     then
         insert(new Unknown());
         logger.info("Phew! CAD risk is low, but we still don't know what's wrong.");

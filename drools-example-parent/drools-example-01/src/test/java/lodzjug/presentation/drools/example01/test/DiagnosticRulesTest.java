@@ -76,12 +76,7 @@ public class DiagnosticRulesTest {
 		session.insert(new ChestPain().exists());
 		session.fireAllRules();
 		
-		Collection<Object> questions = session.getObjects(new ObjectFilter() {
-			@Override
-			public boolean accept(Object fact) {
-				return fact instanceof Question;
-			}
-		});
+		Collection<Object> questions = session.getObjects(new QuestionFilter());
 		
 		assertEquals(5, questions.size());
 	}
@@ -93,12 +88,7 @@ public class DiagnosticRulesTest {
 		session.insert(new ChestPain().exists());
 		session.fireAllRules();
 		
-		Collection<Object> questions = session.getObjects(new ObjectFilter() {
-			@Override
-			public boolean accept(Object fact) {
-				return fact instanceof Question;
-			}
-		});
+		Collection<Object> questions = session.getObjects(new QuestionFilter());
 		
 		assertEquals(5, questions.size());
 		
@@ -117,19 +107,12 @@ public class DiagnosticRulesTest {
 			} else if (question.about().equals(PulmonaryEdema.class)) {
 				session.insert(question.answer(true));
 			}
-			
-			
+			session.update(session.getFactHandle(question),question);
 		}
 		
 		session.fireAllRules();
 		
-		Collection<Object> diagnoses = session.getObjects(new ObjectFilter() {
-			
-			@Override
-			public boolean accept(Object fact) {
-				return fact instanceof Diagnose;
-			}
-		});
+		Collection<Object> diagnoses = session.getObjects(new DiagnoseFilter());
 		
 		assertEquals(1, diagnoses.size());
 		Object diagnose = diagnoses.toArray(new Object[0])[0];
@@ -143,12 +126,7 @@ public class DiagnosticRulesTest {
 		session.insert(new ChestPain().exists());
 		session.fireAllRules();
 		
-		Collection<Object> questions = session.getObjects(new ObjectFilter() {
-			@Override
-			public boolean accept(Object fact) {
-				return fact instanceof Question;
-			}
-		});
+		Collection<Object> questions = session.getObjects(new QuestionFilter());
 		
 		assertEquals(5, questions.size());
 		
@@ -168,21 +146,28 @@ public class DiagnosticRulesTest {
 				session.insert(question.answer(false));
 			}
 			
-			
+			session.update(session.getFactHandle(question),question);
 		}
 		
 		session.fireAllRules();
-		
-		Collection<Object> diagnoses = session.getObjects(new ObjectFilter() {
-			
-			@Override
-			public boolean accept(Object fact) {
-				return fact instanceof Diagnose;
-			}
-		});
+		Collection<Object> diagnoses = session.getObjects(new DiagnoseFilter());
 		
 		assertEquals(1, diagnoses.size());
 		Object diagnose = diagnoses.toArray(new Object[0])[0];
 		assertEquals (Unknown.class, diagnose.getClass());
+	}
+
+	private static final class DiagnoseFilter implements ObjectFilter {
+		@Override
+		public boolean accept(Object fact) {
+			return fact instanceof Diagnose;
+		}
+	}
+
+	private static final class QuestionFilter implements ObjectFilter {
+		@Override
+		public boolean accept(Object fact) {
+			return fact instanceof Question;
+		}
 	}
 }
