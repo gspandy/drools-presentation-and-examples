@@ -84,7 +84,20 @@
 						<target>1.7</target>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.drools</groupId>
+					<artifactId>drools-maven-plugin</artifactId>
+					<version>6.0.0.CR5</version>
+					<extensions>true</extensions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
 	</build>
 </project>

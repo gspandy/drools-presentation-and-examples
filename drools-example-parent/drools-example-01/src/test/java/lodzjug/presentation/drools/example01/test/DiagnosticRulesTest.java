@@ -2,9 +2,7 @@ package lodzjug.presentation.drools.example01.test;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 import lodzjug.presentation.drools.example01.model.Age;
@@ -20,6 +18,7 @@ import lodzjug.presentation.drools.example01.model.Unknown;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -29,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 public class DiagnosticRulesTest {
 
-	private KieContainer kieContainer;
+	private KieBase kieBase;
 	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(DiagnosticRulesTest.class);
@@ -37,15 +36,16 @@ public class DiagnosticRulesTest {
 	@Before
 	public void setUp() throws Exception {
 		KieServices kieServices = KieServices.Factory.get();
-		kieContainer = kieServices.getKieClasspathContainer();
+		KieContainer kieContainer = kieServices.getKieClasspathContainer();
+		kieBase = kieContainer.getKieBase();
 	}
 
 	@Test
 	public void whenChestPainGetFiveQuestions() {
-		KieSession session = kieContainer.newKieSession();
+		KieSession session = kieBase.newKieSession();
 		
 		session.setGlobal("logger", LoggerFactory.getLogger("DIAGNOSTIC RULES"));
-		session.insert(new ChestPain().exists());
+		session.insert(new ChestPain(true));
 		session.fireAllRules();
 		
 		Collection<? extends Object> questions = session.getObjects(new ObjectFilter() {
@@ -60,9 +60,9 @@ public class DiagnosticRulesTest {
 
 	@Test
 	public void cadRiskHigh() {
-		KieSession session = kieContainer.newKieSession();
+		KieSession session = kieBase.newKieSession();
 		session.setGlobal("logger", LoggerFactory.getLogger("DIAGNOSTIC RULES"));
-		session.insert(new ChestPain().exists());
+		session.insert(new ChestPain(true));
 		session.fireAllRules();
 		
 		Collection<? extends Object> questions = session.getObjects(new ObjectFilter() {
@@ -78,11 +78,11 @@ public class DiagnosticRulesTest {
 		
 		while(qIterator.hasNext()) {
 			Question question = (Question) qIterator.next();
-			if (question.about().equals(PainAtRest.class)) {
-				session.insert(question.withDetail("durationInMinutes", 23).answer(true));
+			if (question.getSymptomType().equals(PainAtRest.class)) {
+				session.insert(new PainAtRest(true, 25));
 				session.update(session.getFactHandle(question), question);
-			} else if (question.about().equals(StSegmentAbnormal.class)) {
-				session.insert(question.answer(true));
+			} else if (question.getSymptomType().equals(StSegmentAbnormal.class)) {
+				session.insert(new StSegmentAbnormal(true));
 				session.update(session.getFactHandle(question), question);
 			} else if (question.about().equals(TWaveAbnormal.class)) {
 				session.insert(question.answer(true));
@@ -94,8 +94,6 @@ public class DiagnosticRulesTest {
 				session.insert(question.answer(true));
 				session.update(session.getFactHandle(question), question);
 			}
-			
-			
 		}
 		
 		session.fireAllRules();
@@ -115,7 +113,7 @@ public class DiagnosticRulesTest {
 
 	@Test
 	public void diagnoseUnknownWhenNoPulmonaryEdema() {
-		KieSession session = kieContainer.newKieSession();
+		KieSession session = kieBase.newKieSession();
 		session.setGlobal("logger", LoggerFactory.getLogger("DIAGNOSTIC RULES"));
 		session.insert(new ChestPain().exists());
 		session.fireAllRules();

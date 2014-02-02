@@ -7,16 +7,12 @@ public class PainAtRest extends Symptom {
 
 	private Integer durationInMinutes;
 
-	public PainAtRest() {
+	public PainAtRest(boolean existing, Integer durationInMinutes) {
+		super(existing);
+		this.durationInMinutes = durationInMinutes;
 	}
 
 	public int getDurationInMinutes() {
 		return durationInMinutes;
-	}
-
-	@Override
-	void details(Map<String, Object> answerDetails) {
-		durationInMinutes = (Integer) answerDetails.get("durationInMinutes");
-		
 	}
 }

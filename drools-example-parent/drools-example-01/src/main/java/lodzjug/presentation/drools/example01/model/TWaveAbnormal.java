@@ -4,8 +4,8 @@ import java.util.Map;
 
 public class TWaveAbnormal extends Symptom {
 
-	@Override
-	void details(Map<String, Object> answerDetails) {
+	public TWaveAbnormal(boolean existing) {
+		super(existing);
 	}
 
 }

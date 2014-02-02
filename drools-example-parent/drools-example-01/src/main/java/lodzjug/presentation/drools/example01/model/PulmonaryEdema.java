@@ -5,10 +5,8 @@ import java.util.Map;
 // Obrzêk p³uc
 public class PulmonaryEdema extends Symptom {
 
-	@Override
-	void details(Map<String, Object> answerDetails) {
-		// TODO Auto-generated method stub
-		
+	public PulmonaryEdema(boolean existing) {
+		super(existing);
 	}
 
 }

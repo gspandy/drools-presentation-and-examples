@@ -1,5 +1,4 @@
-//created on: 2013-10-24
-package lodzjug.presentation.drools.example01.rules
+package lodzjug.presentation.drools.example01.rules;
 
 //list any import classes here.
 import lodzjug.presentation.drools.example01.model.ChestPain;
@@ -20,7 +19,6 @@ import org.slf4j.LoggerFactory;
 //declare any global variables here
 
 global Logger logger;
-
 
 rule "Chest pain"
 
@@ -59,14 +57,4 @@ rule "What if no CAD diagnosed?"
     then
         insert(new Unknown());
         logger.info("Phew! CAD risk is low, but we still don't know what's wrong.");
-end
-
-rule "First step validation"
-	when
-		$currentStep : Step ( stepNo == 1 , delivery == CONFIRMED_WITH_TRANSFER )
-		$application : ApplicationForm
-	then
-		modify ($application) {
-			setDeliveryMethod(CONFIRMED_WITH_TRANSFER)
-		}
 end
