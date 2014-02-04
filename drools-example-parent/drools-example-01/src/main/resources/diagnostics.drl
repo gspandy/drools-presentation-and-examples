@@ -25,13 +25,13 @@ rule "Chest pain"
 	salience 1000
     
     when
-        chestPain : ChestPain( existence == Symptom.SymptomExistence.EXISTS )
+        chestPain : ChestPain( existing == true)
     then
-        insert(new PainAtRest().askAbout());
-        insert(new Age().askAbout());
-        insert(new StSegmentAbnormal().askAbout());
-        insert(new TWaveAbnormal().askAbout());
-        insert(new PulmonaryEdema().askAbout());
+        insert(new Question(PainAtRest.class));
+        insert(new Question(Age.class));
+        insert(new Question(StSegmentAbnormal.class));
+        insert(new Question(TWaveAbnormal.class));
+        insert(new Question(PulmonaryEdema.class));
         
         logger.info("Ouch! Chest pain. Let's ask to see if CAD risk is high");
 end
@@ -39,11 +39,11 @@ end
 rule "Check if CAD risk is high"
 	salience 1000
     when
-        painAtRest : PainAtRest( durationInMinutes >= 20, existence == Symptom.SymptomExistence.EXISTS )
-        age : Age( ageInYears >= 65, existence == Symptom.SymptomExistence.EXISTS  )
-        stSegmentAbnormal : StSegmentAbnormal( existence == Symptom.SymptomExistence.EXISTS )
-        tWaveAbnormal : TWaveAbnormal( existence == Symptom.SymptomExistence.EXISTS )
-        pulmonaryEdema : PulmonaryEdema( existence == Symptom.SymptomExistence.EXISTS )
+        painAtRest : PainAtRest( durationInMinutes >= 20, existing == true )
+        age : Age( ageInYears >= 65, existing == true )
+        stSegmentAbnormal : StSegmentAbnormal( existing == true )
+        tWaveAbnormal : TWaveAbnormal( existing == true )
+        pulmonaryEdema : PulmonaryEdema( existing == true )
     then
         insert(new Cad());
         logger.info("Oooops!  CAD risk is high, better take care of yourself");

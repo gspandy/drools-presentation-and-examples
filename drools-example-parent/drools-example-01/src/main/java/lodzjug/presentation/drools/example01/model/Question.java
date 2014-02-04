@@ -6,12 +6,16 @@ public class Question {
 	
 	private boolean answered = false;
 
-	Question(Class<? extends Symptom> symptomType) {
+	public Question(Class<? extends Symptom> symptomType) {
 		this.symptomType = symptomType;
 	}
 
 	public boolean isAnswered() {
 		return answered;
+	}
+	
+	public void answer() {
+		answered = true;
 	}
 
 	public Class<? extends Symptom> getSymptomType() {

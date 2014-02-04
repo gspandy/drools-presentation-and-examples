@@ -9,8 +9,8 @@
 	<artifactId>drools-example-01</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>org.drools</groupId>
-			<artifactId>drools-core</artifactId>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.drools</groupId>
