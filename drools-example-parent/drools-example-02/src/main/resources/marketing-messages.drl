@@ -1,0 +1,41 @@
+//created on: 2014-02-05
+package logjudz.presentation.drools.example02.test
+
+//list any import classes here.
+import lodzjug.presentation.drools.example02.model.Account;
+import lodzjug.presentation.drools.example02.model.Customer;
+import lodzjug.presentation.drools.example02.model.MarketingMessage;
+import lodzjug.presentation.drools.example02.model.Content;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+//declare any global variables here
+
+global Logger logger;
+
+rule "Send Gold Card offer"
+	//agenda-group "Second messages"
+	//salience 50
+	//activation-group "Just one to execute"
+    
+    when
+    	//$customer : Customer(  )
+    	//not MarketingMessage( customer == $customer )
+        $account : Account( balance > 5000)//, customer == $customer )
+    then
+    	logger.info("Sending gold card offer");
+        insert(new MarketingMessage($account.getCustomer(), Content.GOLD_CARD));
+
+end
+
+rule "Send Loan offer"
+	//agenda-group "First messages"
+	//salience 100
+	//activation-group "Just one to execute"
+	
+    when
+        $customer : Customer( averageEarnings < 2000 )
+    then
+    	logger.info("Sending loan offer");
+		insert(new MarketingMessage($customer, Content.LOAN));
+end
