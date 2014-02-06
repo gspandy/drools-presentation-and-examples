@@ -38,4 +38,5 @@ rule "Send Loan offer"
     then
     	logger.info("Sending loan offer");
 		insert(new MarketingMessage($customer, Content.LOAN));
+		
 end

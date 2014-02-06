@@ -68,6 +68,7 @@
 	<modules>
 		<module>drools-example-01</module>
 		<module>drools-example-02</module>
+		<module>drools-example-03</module>
 	</modules>
 
 	<build>

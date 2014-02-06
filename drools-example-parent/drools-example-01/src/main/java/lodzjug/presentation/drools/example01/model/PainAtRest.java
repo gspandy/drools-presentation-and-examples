@@ -1,7 +1,5 @@
 package lodzjug.presentation.drools.example01.model;
 
-import java.util.Map;
-
 //Ból spoczynkowy
 public class PainAtRest extends Symptom {
 

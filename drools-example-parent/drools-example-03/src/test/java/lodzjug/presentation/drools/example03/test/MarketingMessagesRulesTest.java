@@ -1,14 +1,14 @@
-package lodzjug.presentation.drools.example02.test;
+package lodzjug.presentation.drools.example03.test;
 
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import lodzjug.presentation.drools.example02.model.Account;
-import lodzjug.presentation.drools.example02.model.Content;
-import lodzjug.presentation.drools.example02.model.Customer;
-import lodzjug.presentation.drools.example02.model.MarketingMessage;
+import lodzjug.presentation.drools.example03.model.Account;
+import lodzjug.presentation.drools.example03.model.Content;
+import lodzjug.presentation.drools.example03.model.Customer;
+import lodzjug.presentation.drools.example03.model.MarketingMessage;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -80,8 +80,8 @@ public class MarketingMessagesRulesTest {
 	@Test
 	public void whenEarningsIsLowerThan2kAndAccountBalanceIsHigherThan5kSendLoanOffer() {
 		KieSession session = kieBase.newKieSession();
-		//session.getAgenda().getAgendaGroup("Second messages").setFocus();
-		//session.getAgenda().getAgendaGroup("First messages").setFocus();
+		session.getAgenda().getAgendaGroup("Second messages").setFocus();
+		session.getAgenda().getAgendaGroup("First messages").setFocus();
 
 		Customer customer = new Customer(new BigDecimal(1000));
 		Account account = new Account(new BigDecimal(7000), customer);

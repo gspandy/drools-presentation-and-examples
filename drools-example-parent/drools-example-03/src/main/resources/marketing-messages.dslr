@@ -1,0 +1,33 @@
+//created on: 2014-02-05
+package logjudz.presentation.drools.example02.test
+
+//list any import classes here.
+import lodzjug.presentation.drools.example03.model.Account;
+import lodzjug.presentation.drools.example03.model.Customer;
+import lodzjug.presentation.drools.example03.model.MarketingMessage;
+import lodzjug.presentation.drools.example03.model.Content;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+//declare any global variables here
+global Logger logger;
+
+rule "Send Gold Card offer"
+	salience 50
+	activation-group "Just one to execute"
+    
+    when
+        there is an account with balance more than 5000
+    then
+    	offer a gold credit card to the owner
+end
+
+rule "Send Loan offer"
+	salience 100
+	activation-group "Just one to execute"
+	
+    when
+        a customer has average earnings less than 2000
+    then
+		offer a loan to the customer
+end

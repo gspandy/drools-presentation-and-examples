@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
+import org.kie.api.logger.KieRuntimeLogger;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.ObjectFilter;
@@ -44,9 +45,13 @@ public class DiagnosticRulesTest {
 	public void whenChestPainGetFiveQuestions() {
 		KieSession session = kieBase.newKieSession();
 		
+		KieRuntimeLogger consoleLogger = KieServices.Factory.get().getLoggers().newConsoleLogger(session);
+		
 		session.setGlobal("logger", LoggerFactory.getLogger("DIAGNOSTIC RULES"));
 		session.insert(new ChestPain(true));
 		session.fireAllRules();
+		
+		consoleLogger.close();
 		
 		Collection<? extends Object> questions = session.getObjects(new ObjectFilter() {
 			@Override
